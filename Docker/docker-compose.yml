@@ -9,13 +9,11 @@ services:
       - ../Data/confluence:/var/atlassian/application-data/confluence
     environment:
       - TZ=America/Chicago
-      - ATL_PROXY_NAME=confluence.homelab.hackingserver.com
+      - ATL_PROXY_NAME=confluence.example.com # TODO: CHANGEME
       - ATL_PROXY_PORT=443
       - ATL_TOMCAT_PORT=8090
       - ATL_TOMCAT_SCHEME=https
       - ATL_TOMCAT_SECURE=true
-    labels:
-      - "server"
 
   confluence-postgresql:
     image: postgres:latest
@@ -27,14 +25,11 @@ services:
     environment:
       - TZ=America/Chicago
       - POSTGRES_USER=confluencedb
-      # CHANGE THE PASSWORD!
-      - POSTGRES_PASSWORD=changeme
+      - POSTGRES_PASSWORD=changeme # TODO: CHANGEME
       - POSTGRES_DB=confluencedb
       - POSTGRES_ENCODING=UTF8
       - POSTGRES_COLLATE=C
       - POSTGRES_COLLATE_TYPE=C
-    labels:
-      - "database"
 
   confluence-nginx:
     image: nginx
@@ -46,9 +41,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ../config/nginx.conf:/etc/nginx/nginx.conf
-      - ../config/private:/etc/ssl/private
+      - ../Config/nginx.conf:/etc/nginx/nginx.conf
+      - ../Data/nginx:/etc/ssl/private
     environment:
       - TZ=America/Chicago
-    labels:
-      - "proxy"
