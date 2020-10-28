@@ -3,16 +3,15 @@
 ## First Time Prerequisites
 
 1. `rm ./Data/postgres/.gitkeep`
+2. Run [Traefik](https://github.com/MattLombana/App-Traefik)
 
 ## Running the Containers
 
-1. Run `./Config/gen_certs.sh` to generate the SSL certificates (alternatively,
-   add custom certs to the private folder)
-2. Update the following environment variables in [docker-compose.yml](./Docker/docker-compose.yml)
+1. Update the following environment variables in [docker-compose.yml](./Docker/docker-compose.yml)
     * `ATL_PROXY_NAME=confluence.example.com`
     * `POSTGRES_PASSWORD=changeme`
-3. Update the `server_name` in [nginx.conf](./Config/nginx.conf). Note: Use the
-   same value you set for `ATL_PROXY_NAME`
+2. Update the following line in [docker-compose.yml](./Docker/docker-compose.yml)
+    * ``- "traefik.http.routers.confluence.rule=Host(`localhost`)" # Domain Name``
 3. Run `docker-compose -f ./Docker/docker-compose.yml up -d`
 
 ## First Time Setup

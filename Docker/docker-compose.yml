@@ -14,6 +14,16 @@ services:
       - ATL_TOMCAT_PORT=8090
       - ATL_TOMCAT_SCHEME=https
       - ATL_TOMCAT_SECURE=true
+    labels:
+      # Traefik Labels
+      - "traefik.enable=true"
+      # HTTPS Labels
+      - "traefik.http.routers.confluence.rule=Host(`localhost`)" # Domain Name
+      - "traefik.http.routers.confluence.entrypoints=web-secure"
+      - "traefik.http.routers.confluence.middlewares=default-headers@file"
+      - "traefik.http.routers.confluence.service=confluence"
+      - "traefik.http.routers.confluence.tls=true"
+      - "traefik.http.services.confluence.loadbalancer.server.port=8090" # Proxied Port
 
   confluence-postgresql:
     image: postgres:latest
@@ -30,18 +40,3 @@ services:
       - POSTGRES_ENCODING=UTF8
       - POSTGRES_COLLATE=C
       - POSTGRES_COLLATE_TYPE=C
-
-  confluence-nginx:
-    image: nginx
-    container_name: confluence_proxy
-    hostname: confluence_proxy
-    depends_on:
-      - confluence
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ../Config/nginx.conf:/etc/nginx/nginx.conf
-      - ../Data/nginx:/etc/ssl/private
-    environment:
-      - TZ=America/Chicago
